@@ -1,0 +1,215 @@
+/* ================================
+   PAGE LAYOUT
+================================ */
+.editc-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 0 60px;
+  font-family: "Inter", sans-serif;
+}
+
+/* ================================
+   STICKY HEADER
+================================ */
+.editc-sticky {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 15px 0;
+  z-index: 20;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.editc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editc-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.editc-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn:hover {
+  background: #e5e7eb;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border: 1px solid #1d4ed8;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  color: #374151;
+}
+
+.btn-ghost:hover {
+  color: #111827;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-secondary {
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #f3f4f6;
+}
+
+/* ================================
+   FORM CARDS
+================================ */
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+/* ================================
+   FORM GRID
+================================ */
+.grid-1 {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.field.full {
+  grid-column: span 2;
+}
+
+/* ================================
+   INPUTS
+================================ */
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #2563eb;
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.helper {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ================================
+   TOOLS & SCHEDULE ROWS (Modern Design)
+================================ */
+.tool-row,
+.schedule-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px auto;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+/* For schedule: 3 fields + delete */
+.schedule-row {
+  grid-template-columns: 1fr 1fr 1fr auto;
+}
+
+/* ================================
+   FOOTER BUTTONS
+================================ */
+.footer-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* ================================
+   LOADING & ERRORS
+================================ */
+.editc-loading {
+  padding: 50px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.banner.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #dc2626;
+  margin-bottom: 20px;
+}

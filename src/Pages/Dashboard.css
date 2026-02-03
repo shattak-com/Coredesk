@@ -1,0 +1,542 @@
+/* ================= THEME TOKENS (copy to Courses.css too) ================= */
+:root {
+  --sidebar-w: 280px;
+  --radius: 12px;
+  --gap: 16px;
+
+  --bg: #ffffff;
+  --surface: #f7fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --brand: #1e88ff; /* primary brand */
+  --brand-600: #1976d2;
+  --brand-50: #eef6ff;
+  --brand-100: #e3f0ff;
+  --brand-200: #cbe4ff;
+
+  --teal: #14b8a6;
+  --orange: #f59e0b;
+  --violet: #8b5cf6;
+
+  --tile-bg: #eef7ff;
+  --tile-border: #2b6a8a;
+  --tile-shadow: 0 4px 16px rgba(16, 24, 40, 0.06);
+
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --error: #ef4444;
+
+  --ring: 0 0 0 3px rgba(30, 136, 255, 0.18);
+}
+
+/* ================= Base & layout ================= */
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+.courses-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  background: var(--bg);
+  border: 2px solid #c9e6cc;
+  outline: 1px dashed #b7dfb9;
+}
+
+/* ================= Sidebar ================= */
+.sidebar {
+  border-right: 1px solid #e5e7eb;
+  padding: 20px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+  background: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-square {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #40a4ff, #6ec5ff);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+.brand-title {
+  font-size: 22px;
+  line-height: 1.1;
+  margin: 0;
+  font-weight: 800;
+}
+.brand-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.nav {
+  display: grid;
+  gap: 10px;
+}
+.nav-item {
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.nav-item:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+.nav-item.active {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+  color: #0b4a94;
+  box-shadow: var(--ring);
+}
+
+.sidebar-footer {
+  padding-top: 8px;
+}
+.logout-btn {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background: #f8fafc;
+}
+
+/* ================= Main content ================= */
+.content {
+  padding: 22px 28px;
+  overflow: auto;
+}
+
+/* Grids */
+.tile-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: var(--gap);
+  margin-bottom: 22px;
+}
+
+.cards-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: var(--gap);
+  margin-bottom: 22px;
+}
+.cards-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+/* ================= Tiles ================= */
+.tile {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius);
+  box-shadow: var(--tile-shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+/* small KPI tiles */
+.tile-sm {
+  height: 110px;
+  padding: 14px;
+}
+.tile-md {
+  min-height: 190px;
+  padding: 16px 18px;
+}
+.tile-lg {
+  min-height: 260px;
+  padding: 18px 20px;
+}
+
+.tile-header {
+  font-weight: 800;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tile-header .subtle {
+  color: var(--muted);
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.tile-body {
+  color: #0f172a;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* ================= KPI cards ================= */
+.kpi {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.kpi-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #082c4a;
+  background: var(--brand-50);
+  border: 1px solid var(--brand-200);
+}
+.kpi-blue {
+  background: #eaf3ff;
+  border-color: #cfe3ff;
+  color: #0b4a94;
+}
+.kpi-green {
+  background: #e6fbf7;
+  border-color: #bff1e7;
+  color: #065f46;
+}
+.kpi-orange {
+  background: #fff4e5;
+  border-color: #ffe2b8;
+  color: #8a4b00;
+}
+.kpi-violet {
+  background: #f3edff;
+  border-color: #e1d8ff;
+  color: #4a2a9b;
+}
+
+.kpi-label {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.kpi-value {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ================= Sales snapshot ================= */
+.sales-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.sales-stat .label {
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.sales-stat .value {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.chart-placeholder {
+  height: 110px;
+  border: 2px dashed #cfe8ff;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 0 10px 10px;
+  background: linear-gradient(180deg, #f9fbff, #fff);
+}
+.chart-placeholder .bar {
+  width: 10%;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, #6db6ff, #1e88ff);
+  box-shadow: 0 2px 6px rgba(30, 136, 255, 0.3);
+}
+.chart-placeholder .b1 {
+  height: 40%;
+}
+.chart-placeholder .b2 {
+  height: 70%;
+}
+.chart-placeholder .b3 {
+  height: 55%;
+}
+.chart-placeholder .b4 {
+  height: 85%;
+}
+.chart-placeholder .b5 {
+  height: 65%;
+}
+
+/* ================= Top Course card ================= */
+.top-course {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+.top-course img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+.top-course-info h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+/* ================= Recent table ================= */
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+}
+.recent-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.recent-table .thead,
+.recent-table .trow {
+  display: grid;
+  grid-template-columns: 1.6fr 0.6fr 0.6fr 0.6fr 0.5fr;
+  gap: 10px;
+}
+.recent-table .thead {
+  background: #f8fafc;
+  font-weight: 700;
+  padding: 10px 12px;
+  color: #0f172a;
+}
+.recent-table .tbody .trow {
+  padding: 10px 12px;
+  border-top: 1px solid #eef2f7;
+  align-items: center;
+}
+.recent-table .cell.course {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.recent-table .cell.course img {
+  width: 56px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+.recent-table .title-wrap .title {
+  font-weight: 700;
+}
+.recent-table .title-wrap .sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #eef2ff;
+  color: #3730a3;
+}
+.badge.status.published {
+  background: #e6fbf7;
+  color: #065f46;
+  border-color: #bff1e7;
+}
+.badge.status.draft,
+.badge.status.pending {
+  background: #fff4e5;
+  color: #8a4b00;
+  border-color: #ffe2b8;
+}
+.badge.mode,
+.badge.level {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #e2e8f0;
+}
+
+/* ================= Banners / skeleton ================= */
+.banner.error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff2f2;
+  color: #7f1d1d;
+  border: 1px solid #fecaca;
+  margin-bottom: 12px;
+}
+.btn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: 1px solid #d0d7e2;
+  background: #fff;
+  cursor: pointer;
+}
+.btn-ghost {
+  background: transparent;
+}
+.btn:hover {
+  background: #f8fafc;
+}
+
+.skeleton-line {
+  display: inline-block;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  width: 60%;
+}
+.skeleton-line.short {
+  width: 40%;
+}
+.skeleton-chip {
+  display: inline-block;
+  height: 20px;
+  width: 60px;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 1100px) {
+  .tile-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .courses-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+}
+@media (max-width: 700px) {
+  .cards-2 {
+    grid-template-columns: 1fr;
+  }
+  .recent-table .thead,
+  .recent-table .trow {
+    grid-template-columns: 1.2fr 0.6fr 0.6fr 0.6fr 0.6fr;
+  }
+}
+@media (max-width: 520px) {
+  .tile-row {
+    grid-template-columns: 1fr;
+  }
+  .recent-table .thead,
+  .recent-table .trow {
+    grid-template-columns: 1fr 0.6fr 0.6fr;
+  }
+  .recent-table .thead div:nth-child(3),
+  .recent-table .thead div:nth-child(4),
+  .recent-table .trow .cell:nth-child(3),
+  .recent-table .trow .cell:nth-child(4) {
+    display: none;
+  }
+}
+
+/* --- Dashboard-specific badge reset (prevents top-left floating) --- */
+.courses-layout .badge {
+  position: static !important; /* stop absolute positioning from Courses.css */
+  inset: auto !important; /* clears top/left/right/bottom if set */
+  margin: 0;
+  z-index: auto;
+  display: inline-flex; /* keep it as a pill */
+  vertical-align: middle;
+}
+
+/* If your Courses.css has .badge.status { position:absolute } add this too */
+.courses-layout .recent-table .cell .badge,
+.courses-layout .tile .badge {
+  position: static !important;
+}
+/* Keep table badges compact */
+.courses-layout .recent-table .cell .badge {
+  line-height: 1;
+  padding: 4px 8px;
+}
+.kpi:hover {
+  box-shadow: 0 0 0 3px rgba(30, 136, 255, 0.08);
+  transform: translateY(-1px);
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}

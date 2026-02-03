@@ -1,0 +1,27 @@
+const CATEGORY_LABELS = {
+  FUTURED: "Futured",
+  SOFTWARE: "Software Development",
+  DATA: "Data & AI",
+  DEVOPS: "DevOps & Cloud",
+  BUSINESS: "Business & Management",
+  MARKETING: "Marketing",
+  FINANCE: "Finance",
+  CREATIVE: "Creative",
+  ACADEMICAL: "Academical",
+  SPORT: "Sport & Gaming",
+  LIFESTYLE: "Lifestyle",
+  CAREER: "Career & Growth",
+};
+export const categories = [
+  { id: "futured", label: CATEGORY_LABELS.FUTURED },
+  { id: "software-development", label: CATEGORY_LABELS.SOFTWARE },
+  { id: "data", label: CATEGORY_LABELS.DATA },
+  { id: "devops-cloud", label: CATEGORY_LABELS.DEVOPS },
+  { id: "business-management", label: CATEGORY_LABELS.BUSINESS },
+  { id: "marketing", label: CATEGORY_LABELS.MARKETING },
+  { id: "finance", label: CATEGORY_LABELS.FINANCE },
+  { id: "creative", label: CATEGORY_LABELS.CREATIVE },
+  { id: "academical", label: CATEGORY_LABELS.ACADEMICAL },
+  { id: "sport", label: CATEGORY_LABELS.SPORT },
+  { id: "lifestyle", label: CATEGORY_LABELS.LIFESTYLE },
+];
