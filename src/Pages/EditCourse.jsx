@@ -3,7 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCourseById, updateCourse } from "../services/courses.services";
 import "./EditCourse.css";
 import { categories } from "./data/categories";
-
+import "primereact/resources/themes/lara-light-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import { MultiSelect } from "primereact/multiselect";
 const numberFields = new Set([
   "durationHours",
   "durationMinutes",
@@ -12,7 +14,11 @@ const numberFields = new Set([
   "rating",
   "enrollmentCount",
 ]);
-
+const toCategoryArray = (raw) => {
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  if (typeof raw === "string") return raw.trim() ? [raw.trim()] : [];
+  return [];
+};
 const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,7 +43,10 @@ const EditCourse = () => {
           title: data.title ?? "",
           subtitle: data.subtitle ?? "",
           about: data.about ?? data.summary ?? "",
-          category: data.category ?? "",
+          // category: data.category ?? "",
+
+          category: toCategoryArray(data.category), // <-- normalize to array
+
           mode: data.mode ?? "",
           level: data.level ?? "",
           status: data.status ?? "Draft",
@@ -64,6 +73,21 @@ const EditCourse = () => {
       mounted = false;
     };
   }, [id]);
+  const categoryTemplate = (option) => (
+    <div className="flex align-items-center">
+      {/* you can add an icon here if you want */}
+      <span>{option.label}</span>
+    </div>
+  );
+
+  const footerTemplate = () => {
+    const n = course.category?.length ?? 0;
+    return (
+      <div className="py-2 px-3">
+        <b>{n}</b> selected
+      </div>
+    );
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -212,7 +236,7 @@ const EditCourse = () => {
               </div>
             </div>
 
-            <div className="field">
+            {/* <div className="field">
               <label>Category</label>
 
               <select
@@ -229,6 +253,23 @@ const EditCourse = () => {
                   </option>
                 ))}
               </select>
+            </div> */}
+            <div className="field">
+              <label>Category</label>
+              <MultiSelect
+                value={course.category} // ['data','marketing']
+                onChange={(e) => setCourse({ ...course, category: e.value })}
+                options={categories} // [{id,label}]
+                optionLabel="label" // user sees label
+                optionValue="id" // e.value = array of ids
+                display="chip"
+                placeholder="Select Categories"
+                maxSelectedLabels={3}
+                filter // searchable
+                itemTemplate={categoryTemplate} // optional
+                panelFooterTemplate={footerTemplate} // optional
+                className="w-full md:w-20rem"
+              />
             </div>
 
             <div className="field">
