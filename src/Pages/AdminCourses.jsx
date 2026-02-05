@@ -14,6 +14,22 @@ const formatINR = (n) =>
     : n;
 
 const uniq = (arr) => Array.from(new Set(arr.filter(Boolean))).sort();
+const toCategoryArray = (raw) => {
+  if (Array.isArray(raw)) {
+    return raw.filter((x) => typeof x === "string" && x.trim() !== "");
+  }
+  if (typeof raw === "string") {
+    const s = raw.trim();
+    return s ? [s] : [];
+  }
+  return [];
+};
+
+/** Returns the first category (primary) or "" if none */
+const primaryCategoryOf = (categoryArray) =>
+  Array.isArray(categoryArray) && categoryArray.length > 0
+    ? categoryArray[0]
+    : "";
 
 /* ---------- Component ---------- */
 const AdminCourses = () => {
@@ -24,7 +40,7 @@ const AdminCourses = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
-  // filters
+  // filters (keep current UX)
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("All");
   const [status, setStatus] = useState("All");
@@ -38,14 +54,20 @@ const AdminCourses = () => {
         const data = await getAllCourses();
         if (!mounted) return;
 
-        const normalized = (data || []).map((c) => ({
-          ...c,
-          title: c?.title || "",
-          category: c?.category || "",
-          status: c?.status || "Draft",
-          level: c?.level || "",
-          mode: c?.mode || "",
-        }));
+        // ✅ Normalize: title, status, etc., and category → string[]
+        const normalized = (data || []).map((c) => {
+          const categoryArray = toCategoryArray(c?.category);
+          return {
+            ...c,
+            title: c?.title || "",
+            category: categoryArray, // <-- always array
+            status: c?.status || "Draft",
+            level: c?.level || "",
+            mode: c?.mode || "",
+            subtitle: c?.subtitle || "",
+            summary: c?.summary || "",
+          };
+        });
 
         // Published first, then by title
         const sorted = normalized.sort((a, b) => {
@@ -66,25 +88,37 @@ const AdminCourses = () => {
     return () => (mounted = false);
   }, []);
 
-  const categories = useMemo(
-    () => ["All", ...uniq(courses.map((c) => c.category))],
-    [courses],
-  );
+  // Build category filter options (using "primary" category so we don't change your UX)
+  // If a course has multiple categories, the first one acts as its "primary" for this filter.
+  const categories = useMemo(() => {
+    const primaryValues = courses.map((c) => primaryCategoryOf(c.category));
+    return ["All", ...uniq(primaryValues)];
+  }, [courses]);
+
   const statuses = useMemo(
-    () => ["All", ...uniq(courses.map((c) => c.status))],
+    () => ["All", ...uniq(courses.map((c) => c.status || "Draft"))],
     [courses],
   );
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
+
     return courses.filter((c) => {
-      if (category !== "All" && (c.category || "") !== category) return false;
+      // Single-select category filter on primary category (backwards compatible)
+      const primaryCat = primaryCategoryOf(c.category);
+      if (category !== "All" && primaryCat !== category) return false;
+
       if (status !== "All" && (c.status || "Draft") !== status) return false;
+
       if (!term) return true;
+
+      // Search across all categories (joined), plus your existing fields
+      const allCatsJoined = (c.category || []).join(" ");
+
       const hay = [
         c.title,
         c.subtitle,
-        c.category,
+        allCatsJoined,
         c.status,
         c.level,
         c.mode,
@@ -93,14 +127,13 @@ const AdminCourses = () => {
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
+
       return hay.includes(term);
     });
   }, [courses, category, status, q]);
 
   return (
     <div className=" ac-root">
-      {/* Sidebar (same structure as Dashboard for visual continuity) */}
-
       {/* Main */}
       <main
         className="content ac-content"
@@ -110,6 +143,7 @@ const AdminCourses = () => {
         <header className="ac-header">
           <h1 className="ac-title">All Course</h1>
           <div className="ac-filters">
+            {/* Category filter (single-select, keeps your UX) */}
             <div className="ac-filter">
               <label>Filter : category</label>
               <select
@@ -125,6 +159,7 @@ const AdminCourses = () => {
               </select>
             </div>
 
+            {/* Status filter */}
             <div className="ac-filter">
               <label>Filter : publish</label>
               <select
@@ -140,6 +175,7 @@ const AdminCourses = () => {
               </select>
             </div>
 
+            {/* Search */}
             <div className="ac-filter ac-filter-search">
               <label>search – (deprioritized)</label>
               <input
@@ -209,9 +245,16 @@ const AdminCourses = () => {
                     {c.status || "Draft"}
                   </span>
 
-                  {c.category && (
-                    <span className="ac-badge ac-category">{c.category}</span>
-                  )}
+                  {/* ✅ Show ALL categories as chips */}
+                  {Array.isArray(c.category) && c.category.length > 0 ? (
+                    <span className="ac-badges-wrap">
+                      {c.category.map((cat) => (
+                        <span key={cat} className="ac-badge ac-category">
+                          {cat}
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div className="ac-actions">

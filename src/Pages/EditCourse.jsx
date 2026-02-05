@@ -145,7 +145,7 @@ const EditCourse = () => {
             >
               ← Back
             </button>
-            <button
+            {/* <button
               type="button"
               className="btn"
               onClick={() => navigate("/admin/courses")}
@@ -153,7 +153,7 @@ const EditCourse = () => {
               title="Go to list"
             >
               Courses list
-            </button>
+            </button> */}
             <button
               form="edit-course-form"
               type="submit"

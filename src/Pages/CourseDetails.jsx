@@ -12,6 +12,19 @@ const formatINR = (n) =>
       }).format(n)
     : n;
 
+// ---------- helpers ----------
+/** Normalize to array of strings (accepts string | string[] | undefined) */
+const toCategoryArray = (v) => {
+  if (Array.isArray(v)) {
+    return v.filter((x) => typeof x === "string" && x.trim() !== "");
+  }
+  if (typeof v === "string") {
+    const s = v.trim();
+    return s ? [s] : [];
+  }
+  return [];
+};
+
 const asArray = (v) => (Array.isArray(v) ? v : []);
 const safeTxt = (v, d = "—") => (v && String(v).trim() ? v : d);
 
@@ -104,7 +117,7 @@ const CourseDetails = () => {
     title,
     subtitle,
     about,
-    category,
+    category, // ← can be string | string[]
     level,
     mode,
     status,
@@ -135,6 +148,9 @@ const CourseDetails = () => {
     reviews,
     faqs,
   } = course;
+
+  // ✅ Normalize categories for display
+  const categories = toCategoryArray(category);
 
   const heroImg =
     (thumbnailImage && thumbnailImage.trim()) ||
@@ -222,9 +238,15 @@ const CourseDetails = () => {
             >
               {status || "Draft"}
             </Badge>
-            {category ? (
-              <Badge className="cd-category">{category}</Badge>
-            ) : null}
+
+            {/* ✅ Show ALL categories as chips */}
+            {categories.length > 0 &&
+              categories.map((cat) => (
+                <Badge key={cat} className="cd-category">
+                  {cat}
+                </Badge>
+              ))}
+
             {level ? <Badge>{level}</Badge> : null}
             {mode ? <Badge>{mode}</Badge> : null}
           </div>
@@ -268,7 +290,9 @@ const CourseDetails = () => {
         <div className="cd-stat">
           <div className="cd-stat-label">Status</div>
           <div
-            className={`cd-stat-value ${(status || "").toLowerCase() === "published" ? "ok" : "warn"}`}
+            className={`cd-stat-value ${
+              (status || "").toLowerCase() === "published" ? "ok" : "warn"
+            }`}
           >
             {status || "Draft"}
           </div>
@@ -592,7 +616,7 @@ const CourseDetails = () => {
         </div>
       </Section>
 
-      {/* About (if you want to repeat at the bottom) */}
+      {/* About (optional repeat at bottom) */}
       {about ? (
         <Section icon="📝" title="About">
           <p className="cd-about">{about}</p>

@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { addCourse } from "../services/courses.services";
 import "./AddCourse.css";
 import { categories } from "./data/categories";
+import { MultiSelect } from "primereact/multiselect";
 
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+// import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 const numberFields = new Set([
   "durationHours",
   "durationMinutes",
@@ -24,7 +28,7 @@ const AddCourse = () => {
     title: "",
     subtitle: "",
     about: "",
-    category: "",
+    category: [],
     mode: "",
     level: "",
     status: "Draft",
@@ -82,6 +86,12 @@ const AddCourse = () => {
       return "Duration minutes must be between 0 and 59";
     if (payload.rating < 0 || payload.rating > 5)
       return "Rating must be between 0 and 5";
+
+    if (!course.category || course.category.length === 0) {
+      // show a message / mark invalid
+      return "Category is required";
+    }
+
     return "";
   };
 
@@ -129,7 +139,7 @@ const AddCourse = () => {
       title: "",
       subtitle: "",
       about: "",
-      category: "",
+      category: [],
       mode: "",
       level: "",
       status: "Draft",
@@ -150,6 +160,22 @@ const AddCourse = () => {
     setError("");
   };
 
+  const categoryTemplate = (option) => (
+    <div className="flex align-items-center">
+      {/* you can add an icon here if you want */}
+      <span>{option.label}</span>
+    </div>
+  );
+
+  const footerTemplate = () => {
+    const n = course.category?.length ?? 0;
+    return (
+      <div className="py-2 px-3">
+        <b>{n}</b> selected
+      </div>
+    );
+  };
+
   return (
     <div className="addc-page">
       {/* Sticky header */}
@@ -166,7 +192,7 @@ const AddCourse = () => {
             >
               ← Back
             </button>
-            <button
+            {/* <button
               type="button"
               className="btn"
               onClick={() => navigate("/admin/courses")}
@@ -174,7 +200,7 @@ const AddCourse = () => {
               title="Go to list"
             >
               Courses list
-            </button>
+            </button> */}
             <button
               type="button"
               className="btn btn-ok"
@@ -242,7 +268,7 @@ const AddCourse = () => {
               </div>
             </div>
 
-            <div className="field">
+            {/* <div className="field">
               <label>Category</label>
 
               <select
@@ -259,6 +285,23 @@ const AddCourse = () => {
                   </option>
                 ))}
               </select>
+            </div> */}
+            <div className="field">
+              <label>Category</label>
+              <MultiSelect
+                value={course.category} // ['data','marketing']
+                onChange={(e) => setCourse({ ...course, category: e.value })}
+                options={categories} // [{id,label}]
+                optionLabel="label" // user sees label
+                optionValue="id" // e.value = array of ids
+                display="chip"
+                placeholder="Select Categories"
+                maxSelectedLabels={3}
+                filter // searchable
+                itemTemplate={categoryTemplate} // optional
+                panelFooterTemplate={footerTemplate} // optional
+                className="w-full md:w-20rem"
+              />
             </div>
 
             <div className="field">

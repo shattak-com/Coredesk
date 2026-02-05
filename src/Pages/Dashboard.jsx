@@ -234,7 +234,8 @@ const Dashboard = ({ courses = [], loading = false, err = "" }) => {
                 <div className="thead">
                   <div>Course</div>
                   <div>Status</div>
-                  <div>Price</div>
+                  {/* <div>Price</div> */}
+                  <div>Course ID</div>
                   <div>Enrollments</div>
                   <div>Rating</div>
                 </div>
@@ -269,13 +270,14 @@ const Dashboard = ({ courses = [], loading = false, err = "" }) => {
                         </span>
                       </div>
                       <div className="cell">
-                        {Number(c?.price) > 0
+                        {/* {Number(c?.price) > 0
                           ? new Intl.NumberFormat("en-IN", {
                               style: "currency",
                               currency: "INR",
                               maximumFractionDigits: 0,
                             }).format(c?.price)
-                          : "Free"}
+                          : "Free"} */}
+                          {c?.id || "—"}
                       </div>
                       <div className="cell">
                         {(Number(c?.enrollmentCount) || 0).toLocaleString()}
