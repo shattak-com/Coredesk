@@ -6,6 +6,11 @@ import { categories } from "./data/categories";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { MultiSelect } from "primereact/multiselect";
+import { Calendar } from "primereact/calendar";
+import { InputNumber } from "primereact/inputnumber";
+// (Optional) if you want PrimeReact buttons/icons later:
+// import { Button } from "primereact/button";
+
 const numberFields = new Set([
   "durationHours",
   "durationMinutes",
@@ -45,7 +50,7 @@ const EditCourse = () => {
           about: data.about ?? data.summary ?? "",
           // category: data.category ?? "",
 
-          category: toCategoryArray(data.category), // <-- normalize to array
+          categories: toCategoryArray(data.categories), // <-- normalize to array
 
           mode: data.mode ?? "",
           level: data.level ?? "",
@@ -81,7 +86,7 @@ const EditCourse = () => {
   );
 
   const footerTemplate = () => {
-    const n = course.category?.length ?? 0;
+    const n = course.categories?.length ?? 0;
     return (
       <div className="py-2 px-3">
         <b>{n}</b> selected
@@ -89,6 +94,41 @@ const EditCourse = () => {
     );
   };
 
+  // Add a fresh session row
+  const addScheduleItem = () => {
+    setSchedule((prev) => [
+      ...prev,
+      { label: "", start: null, durationMinutes: 60 }, // default 1 hr
+    ]);
+  };
+
+  const updateScheduleItem = (index, patch) => {
+    setSchedule((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], ...patch };
+      return next;
+    });
+  };
+
+  const removeScheduleItem = (index) => {
+    setSchedule((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Auto-calc total course duration from all sessions
+  useEffect(() => {
+    if (!schedule || schedule.length === 0) return; // allow manual inputs when empty
+
+    const totalMinutes = schedule.reduce((sum, s) => {
+      const minutes = Number(s?.durationMinutes) || 0;
+      return sum + Math.max(0, minutes);
+    }, 0);
+
+    setCourse((prev) => ({
+      ...prev,
+      durationHours: Math.floor(totalMinutes / 60),
+      durationMinutes: totalMinutes % 60,
+    }));
+  }, [schedule]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourse((prev) => {
@@ -114,7 +154,14 @@ const EditCourse = () => {
     return {
       ...course,
       tools,
-      schedule,
+      // schedule,
+
+      schedule: schedule.map((s) => ({
+        label: s.label?.trim() || "",
+        start: s.start ? new Date(s.start).toISOString() : null, // store ISO for backend
+        durationMinutes: Number(s.durationMinutes) || 0,
+      })),
+
       updatedAt: Date.now(),
     };
   }, [course, tools, schedule]);
@@ -257,8 +304,8 @@ const EditCourse = () => {
             <div className="field">
               <label>Category</label>
               <MultiSelect
-                value={course.category} // ['data','marketing']
-                onChange={(e) => setCourse({ ...course, category: e.value })}
+                value={course.categories} // ['data','marketing']
+                onChange={(e) => setCourse({ ...course, categories: e.value })}
                 options={categories} // [{id,label}]
                 optionLabel="label" // user sees label
                 optionValue="id" // e.value = array of ids

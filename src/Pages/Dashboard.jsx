@@ -182,9 +182,9 @@ const Dashboard = ({ courses = [], loading = false, err = "" }) => {
                       {metrics.topCourse?.title}
                     </h4>
                     <div className="chips">
-                      {metrics.topCourse?.category && (
+                      {metrics.topCourse?.categories && (
                         <span className="chip">
-                          {metrics.topCourse.category}
+                          {metrics.topCourse.categories}
                         </span>
                       )}
                       {metrics.topCourse?.level && (
@@ -256,7 +256,8 @@ const Dashboard = ({ courses = [], loading = false, err = "" }) => {
                             {c?.title}
                           </div>
                           <div className="sub">
-                            {c?.category || "—"} · {c?.level || "—"}
+                            {/* {c?.categories || "—"} · {c?.level || "—"} */}
+                            {c?.categories?.join(", ") || "—"} - {c?.level}
                           </div>
                         </div>
                       </div>

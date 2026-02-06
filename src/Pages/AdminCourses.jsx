@@ -42,7 +42,7 @@ const AdminCourses = () => {
 
   // filters (keep current UX)
   const [q, setQ] = useState("");
-  const [category, setCategory] = useState("All");
+  const [categories, setCategories] = useState("All");
   const [status, setStatus] = useState("All");
 
   useEffect(() => {
@@ -56,11 +56,11 @@ const AdminCourses = () => {
 
         // ✅ Normalize: title, status, etc., and category → string[]
         const normalized = (data || []).map((c) => {
-          const categoryArray = toCategoryArray(c?.category);
+          const categoryArray = toCategoryArray(c?.categories);
           return {
             ...c,
             title: c?.title || "",
-            category: categoryArray, // <-- always array
+            categories: categoryArray, // <-- always array
             status: c?.status || "Draft",
             level: c?.level || "",
             mode: c?.mode || "",
@@ -90,7 +90,7 @@ const AdminCourses = () => {
 
   // Build category filter options (using "primary" category so we don't change your UX)
   // If a course has multiple categories, the first one acts as its "primary" for this filter.
-  const categories = useMemo(() => {
+  const all_categories = useMemo(() => {
     const primaryValues = courses.map((c) => primaryCategoryOf(c.category));
     return ["All", ...uniq(primaryValues)];
   }, [courses]);
@@ -105,15 +105,15 @@ const AdminCourses = () => {
 
     return courses.filter((c) => {
       // Single-select category filter on primary category (backwards compatible)
-      const primaryCat = primaryCategoryOf(c.category);
-      if (category !== "All" && primaryCat !== category) return false;
+      const primaryCat = primaryCategoryOf(c.categories);
+      if (categories !== "All" && primaryCat !== categories) return false;
 
       if (status !== "All" && (c.status || "Draft") !== status) return false;
 
       if (!term) return true;
 
       // Search across all categories (joined), plus your existing fields
-      const allCatsJoined = (c.category || []).join(" ");
+      const allCatsJoined = (c.categories || []).join(" ");
 
       const hay = [
         c.title,
@@ -130,7 +130,7 @@ const AdminCourses = () => {
 
       return hay.includes(term);
     });
-  }, [courses, category, status, q]);
+  }, [courses, categories, status, q]);
 
   return (
     <div className=" ac-root">
@@ -148,10 +148,10 @@ const AdminCourses = () => {
               <label>Filter : category</label>
               <select
                 className="ac-input"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={categories}
+                onChange={(e) => setCategories(e.target.value)}
               >
-                {categories.map((c) => (
+                {all_categories.map((c) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
@@ -246,9 +246,9 @@ const AdminCourses = () => {
                   </span>
 
                   {/* ✅ Show ALL categories as chips */}
-                  {Array.isArray(c.category) && c.category.length > 0 ? (
+                  {Array.isArray(c.categories) && c.categories.length > 0 ? (
                     <span className="ac-badges-wrap">
-                      {c.category.map((cat) => (
+                      {c.categories.map((cat) => (
                         <span key={cat} className="ac-badge ac-category">
                           {cat}
                         </span>

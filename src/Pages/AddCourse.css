@@ -259,3 +259,197 @@
 .btn-secondary:hover {
   background: #f3f4f6;
 }
+.schedule-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+.duration-group {
+  display: flex;
+  align-items: center;
+}
+/* ------------------------------------------------------
+   Modern Schedule Section Styling (v2)
+   - Matches your card & token system
+   - Aligns PrimeReact inputs
+------------------------------------------------------- */
+
+/* Row as a mini-card */
+.schedule-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 0.9fr 70px; /* label | date-time | duration | remove */
+  gap: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.08s ease;
+}
+.schedule-row:hover {
+  border-color: var(--brand-200);
+  box-shadow: 0 10px 24px rgba(30, 136, 255, 0.12);
+}
+.schedule-row:active {
+  transform: translateY(1px);
+}
+
+/* Field labels inside schedule */
+.schedule-row .field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Unify input visuals inside schedule */
+.schedule-row .input,
+.schedule-row .p-inputtext,
+.schedule-row .p-calendar,
+.schedule-row .p-inputnumber {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* PrimeReact Calendar input alignment */
+.p-calendar .p-inputtext {
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  color: var(--text) !important;
+  outline: none !important;
+}
+.p-calendar .p-inputtext:focus {
+  border-color: var(--brand-200) !important;
+  box-shadow: var(--ring) !important;
+}
+
+/* PrimeReact number inputs */
+.p-inputnumber .p-inputtext {
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  color: var(--text) !important;
+  outline: none !important;
+}
+.p-inputnumber .p-inputtext:focus {
+  border-color: var(--brand-200) !important;
+  box-shadow: var(--ring) !important;
+}
+
+/* duration (h + m) side-by-side */
+.duration-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.duration-group .p-inputnumber {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* helper under fields */
+.schedule-row .helper {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Remove button – soft danger */
+.btn-remove {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+  height: 44px;
+  align-self: end;
+}
+.btn-remove:hover {
+  background: #ffe4e6;
+  color: #7f1d1d;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+/* Add session – brand subtle */
+.btn-add-session {
+  background: var(--brand-50);
+  color: var(--brand-600);
+  border: 1px solid var(--brand-200);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 6px;
+  transition: 0.2s ease;
+}
+.btn-add-session:hover {
+  background: #e7f2ff; /* slightly darker than brand-50 */
+  color: #0b1324;
+  box-shadow: 0 4px 12px rgba(30, 136, 255, 0.18);
+}
+
+/* Auto summary line */
+.schedule-total-helper,
+.schedule-summary {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 10px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .schedule-row {
+    grid-template-columns: 1fr 1fr 1fr 56px;
+    gap: 12px;
+  }
+}
+@media (max-width: 720px) {
+  .schedule-row {
+    grid-template-columns: 1fr;
+  }
+  .btn-remove {
+    width: 100%;
+  }
+}
+
+/* Optional: better PrimeReact button icons inside inputs */
+.p-inputnumber .p-inputnumber-button,
+.p-calendar-w-btn .p-button {
+  border-radius: 8px !important;
+}
+
+/* Optional subtle focus ring on schedule-row when any child is focused */
+.schedule-row:has(.p-inputtext:focus, .input:focus) {
+  box-shadow: 0 10px 24px rgba(30, 136, 255, 0.14);
+  border-color: var(--brand-200);
+}
+
+/* Fix for Safari (no :has support) – lightweight fallback */
+@supports not selector(:has(*)) {
+  .schedule-row.focus-ring {
+    box-shadow: 0 10px 24px rgba(30, 136, 255, 0.14);
+    border-color: var(--brand-200);
+  }
+}

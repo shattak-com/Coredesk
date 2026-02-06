@@ -117,7 +117,7 @@ const CourseDetails = () => {
     title,
     subtitle,
     about,
-    category, // ← can be string | string[]
+    categories, // ← can be string | string[]
     level,
     mode,
     status,
@@ -150,7 +150,7 @@ const CourseDetails = () => {
   } = course;
 
   // ✅ Normalize categories for display
-  const categories = toCategoryArray(category);
+  const all_categories = toCategoryArray(categories);
 
   const heroImg =
     (thumbnailImage && thumbnailImage.trim()) ||

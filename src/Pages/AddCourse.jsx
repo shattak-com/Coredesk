@@ -1,9 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addCourse } from "../services/courses.services";
 import "./AddCourse.css";
 import { categories } from "./data/categories";
 import { MultiSelect } from "primereact/multiselect";
+import { Calendar } from "primereact/calendar";
+import { InputNumber } from "primereact/inputnumber";
+// (Optional) if you want PrimeReact buttons/icons later:
+// import { Button } from "primereact/button";
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
@@ -28,7 +32,7 @@ const AddCourse = () => {
     title: "",
     subtitle: "",
     about: "",
-    category: [],
+    categories: [],
     mode: "",
     level: "",
     status: "Draft",
@@ -45,7 +49,41 @@ const AddCourse = () => {
 
   const [tools, setTools] = useState([]);
   const [schedule, setSchedule] = useState([]);
+  // Add a fresh session row
+  const addScheduleItem = () => {
+    setSchedule((prev) => [
+      ...prev,
+      { label: "", start: null, durationMinutes: 60 }, // default 1 hr
+    ]);
+  };
 
+  const updateScheduleItem = (index, patch) => {
+    setSchedule((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], ...patch };
+      return next;
+    });
+  };
+
+  const removeScheduleItem = (index) => {
+    setSchedule((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Auto-calc total course duration from all sessions
+  useEffect(() => {
+    if (!schedule || schedule.length === 0) return; // allow manual inputs when empty
+
+    const totalMinutes = schedule.reduce((sum, s) => {
+      const minutes = Number(s?.durationMinutes) || 0;
+      return sum + Math.max(0, minutes);
+    }, 0);
+
+    setCourse((prev) => ({
+      ...prev,
+      durationHours: Math.floor(totalMinutes / 60),
+      durationMinutes: totalMinutes % 60,
+    }));
+  }, [schedule]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourse((prev) => {
@@ -70,7 +108,14 @@ const AddCourse = () => {
     return {
       ...course,
       tools,
-      schedule,
+      // schedule,
+
+      schedule: schedule.map((s) => ({
+        label: s.label?.trim() || "",
+        start: s.start ? new Date(s.start).toISOString() : null, // store ISO for backend
+        durationMinutes: Number(s.durationMinutes) || 0,
+      })),
+
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
@@ -87,9 +132,18 @@ const AddCourse = () => {
     if (payload.rating < 0 || payload.rating > 5)
       return "Rating must be between 0 and 5";
 
-    if (!course.category || course.category.length === 0) {
+    if (!course.categories || course.categories.length === 0) {
       // show a message / mark invalid
       return "Category is required";
+    }
+
+    for (let i = 0; i < schedule.length; i++) {
+      const s = schedule[i];
+      if (!s.label?.trim())
+        return `Schedule ${i + 1}: session label is required`;
+      if (!s.start) return `Schedule ${i + 1}: pick a date & time`;
+      if (!s.durationMinutes || s.durationMinutes <= 0)
+        return `Schedule ${i + 1}: duration must be greater than 0`;
     }
 
     return "";
@@ -139,7 +193,7 @@ const AddCourse = () => {
       title: "",
       subtitle: "",
       about: "",
-      category: [],
+      categories: [],
       mode: "",
       level: "",
       status: "Draft",
@@ -168,7 +222,7 @@ const AddCourse = () => {
   );
 
   const footerTemplate = () => {
-    const n = course.category?.length ?? 0;
+    const n = course.categories?.length ?? 0;
     return (
       <div className="py-2 px-3">
         <b>{n}</b> selected
@@ -289,8 +343,8 @@ const AddCourse = () => {
             <div className="field">
               <label>Category</label>
               <MultiSelect
-                value={course.category} // ['data','marketing']
-                onChange={(e) => setCourse({ ...course, category: e.value })}
+                value={course.categories} // ['data','marketing']
+                onChange={(e) => setCourse({ ...course, categories: e.value })}
                 options={categories} // [{id,label}]
                 optionLabel="label" // user sees label
                 optionValue="id" // e.value = array of ids
@@ -461,32 +515,16 @@ const AddCourse = () => {
         <section className="card">
           <h3 className="card-title">Timeline &amp; Metrics</h3>
           <div className="grid-2">
-            <div className="field">
+            {/* <div className="field">
               <label>Duration (Hours)</label>
-              <input
-                className="input"
-                name="durationHours"
-                type="number"
-                min="0"
-                value={course.durationHours}
-                onChange={handleChange}
-                placeholder="e.g., 4"
-              />
-            </div>
-
-            <div className="field">
-              <label>Duration (Minutes)</label>
-              <input
-                className="input"
-                name="durationMinutes"
-                type="number"
-                min="0"
-                max="59"
-                value={course.durationMinutes}
-                onChange={handleChange}
-                placeholder="e.g., 30"
-              />
-            </div>
+              {course.durationHours} h {course.durationMinutes} m
+              {schedule.length > 0 && (
+                <div className="helper">
+                  Auto-calculated from schedule. Clear schedule to edit
+                  manually.
+                </div>
+              )}
+            </div> */}
 
             <div className="field">
               <label>Rating (0–5)</label>
@@ -568,6 +606,7 @@ const AddCourse = () => {
             + Add Tool
           </button>
         </section>
+
         <section className="card">
           <h3 className="card-title">Schedule</h3>
 
@@ -575,62 +614,133 @@ const AddCourse = () => {
             <div className="empty-msg">No schedule added yet.</div>
           )}
 
-          {schedule.map((item, index) => (
-            <div key={index} className="schedule-row">
-              <input
-                className="input"
-                placeholder="Session Label"
-                value={item.label}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].label = e.target.value;
-                  setSchedule(list);
-                }}
-              />
+          {schedule.map((item, index) => {
+            const start = item.start ? new Date(item.start) : null;
+            const end =
+              start && item.durationMinutes
+                ? new Date(start.getTime() + item.durationMinutes * 60000)
+                : null;
 
-              <input
-                className="input"
-                placeholder="Date & Time"
-                value={item.time}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].time = e.target.value;
-                  setSchedule(list);
-                }}
-              />
+            const hours = Math.floor((item.durationMinutes || 0) / 60);
+            const minutes = (item.durationMinutes || 0) % 60;
 
-              <input
-                className="input"
-                placeholder="Duration e.g. 1h 30m"
-                value={item.duration}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].duration = e.target.value;
-                  setSchedule(list);
-                }}
-              />
-
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() =>
-                  setSchedule(schedule.filter((_, i) => i !== index))
-                }
+            return (
+              <div
+                key={index}
+                className="schedule-row"
+                onFocus={(e) => e.currentTarget.classList.add("focus-ring")}
+                onBlur={(e) => e.currentTarget.classList.remove("focus-ring")}
               >
-                ✕
-              </button>
-            </div>
-          ))}
+                {/* Label */}
+                <div className="field">
+                  <label>Session Label *</label>
+                  <input
+                    className="input"
+                    placeholder="e.g., Kickoff, Module 1, Live Q&A"
+                    value={item.label}
+                    onChange={(e) =>
+                      updateScheduleItem(index, { label: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Date & Time */}
+                <div className="field">
+                  <label>Date & Time *</label>
+                  <Calendar
+                    value={start}
+                    onChange={(e) =>
+                      updateScheduleItem(index, { start: e.value })
+                    }
+                    showTime
+                    hourFormat="24"
+                    showIcon
+                    placeholder="Pick date & time"
+                    className="w-full"
+                  />
+                  <span className="helper">
+                    Stored as local time; saved as ISO (UTC).
+                  </span>
+                </div>
+
+                {/* Duration */}
+                <div className="field">
+                  <label>Duration *</label>
+                  <div className="duration-group">
+                    <InputNumber
+                      value={hours}
+                      onValueChange={(e) => {
+                        const newHours = Math.max(0, e.value || 0);
+                        const newTotal =
+                          newHours * 60 + ((item.durationMinutes || 0) % 60);
+                        updateScheduleItem(index, {
+                          durationMinutes: newTotal,
+                        });
+                      }}
+                      showButtons
+                      min={0}
+                      max={23}
+                      suffix=" h"
+                    />
+                    <InputNumber
+                      value={minutes}
+                      onValueChange={(e) => {
+                        let m = Math.max(0, e.value || 0);
+                        if (m > 59) m = 59;
+                        const newTotal =
+                          Math.floor((item.durationMinutes || 0) / 60) * 60 + m;
+                        updateScheduleItem(index, {
+                          durationMinutes: newTotal,
+                        });
+                      }}
+                      showButtons
+                      min={0}
+                      max={59}
+                      step={5}
+                      suffix=" m"
+                    />
+                  </div>
+                  <span className="helper">
+                    {end
+                      ? `Ends: ${end.toLocaleString()}`
+                      : "Pick start time and duration to see end time"}
+                  </span>
+                </div>
+
+                {/* Remove */}
+                <div className="field">
+                  <label>&nbsp;</label>
+                  <button
+                    type="button"
+                    // className="btn-danger"
+
+                    className="btn-remove"
+                    onClick={() => removeScheduleItem(index)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            );
+          })}
 
           <button
             type="button"
-            className="btn btn-secondary"
-            onClick={() =>
-              setSchedule([...schedule, { label: "", time: "", duration: "" }])
-            }
+            // className="btn-secondary"
+
+            className="btn-add-session"
+            onClick={addScheduleItem}
           >
-            + Add Schedule Item
+            + Add Session
           </button>
+
+          <div className="helper" style={{ marginTop: 12 }}>
+            Total duration (auto):
+            <b>
+              {" "}
+              {course.durationHours}h {course.durationMinutes}m
+            </b>
+          </div>
         </section>
         {/* Footer buttons */}
         <div className="footer-row">
