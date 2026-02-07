@@ -276,180 +276,213 @@
    - Aligns PrimeReact inputs
 ------------------------------------------------------- */
 
-/* Row as a mini-card */
-.schedule-row {
+
+/* --- Calendar visual fixes --- */
+.schedule-card .p-calendar-w-btn .p-inputtext {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.schedule-card .p-calendar-w-btn .p-button {
+  /* Make trigger subtle and match input height */
+  background: #f3f5f7;
+  border-color: #e6eaee;
+  color: #334155;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  height: 42px;
+  width: 42px;
+}
+
+.schedule-card .p-calendar-w-btn .p-button:hover {
+  background: #e9eef2;
+}
+
+/* Keep the calendar group inside rounded edges */
+.schedule-card .p-calendar-w-btn {
+  border-radius: 10px;
+  overflow: hidden; /* prevents button overflow */
+  border: 1px solid #e5e8eb;
+}
+
+/* --- InputNumber compact layout --- */
+.inputnumber-compact {
+  max-width: 140px; /* keeps duration compact */
+}
+
+.inputnumber-compact .p-inputnumber-input {
+  height: 42px;
+  line-height: 42px;
+  border-radius: 10px 0 0 10px !important;
+  border-right: 0 !important; /* merges with buttons */
+}
+
+.inputnumber-compact .p-inputnumber {
+  width: 100%;
+}
+
+/* Horizontal buttons neatly attached */
+.inputnumber-compact .p-inputnumber-button-group {
+  height: 42px;
+}
+
+.inputnumber-compact .p-button {
+  height: 42px;
+  border-radius: 0 10px 10px 0 !important;
+  background: #f3f5f7;
+  border-color: #e6eaee;
+  color: #334155;
+}
+
+.inputnumber-compact .p-button:hover {
+  background: #e9eef2;
+}
+
+/* Make +/- buttons texty and minimal */
+.btn-step.p-button {
+  padding: 0 10px;
+}
+
+/* --- Field spacing/alignment --- */
+.schedule-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1.1fr 0.9fr 70px; /* label | date-time | duration | remove */
-  gap: 16px;
-  padding: 16px;
-  margin-bottom: 14px;
-
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.08s ease;
-}
-.schedule-row:hover {
-  border-color: var(--brand-200);
-  box-shadow: 0 10px 24px rgba(30, 136, 255, 0.12);
-}
-.schedule-row:active {
-  transform: translateY(1px);
+  grid-template-columns: 1.1fr 1.1fr 0.8fr;
+  gap: 16px 18px;
 }
 
-/* Field labels inside schedule */
-.schedule-row .field label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #475569;
-  margin-bottom: 6px;
-  display: block;
-}
-
-/* Unify input visuals inside schedule */
-.schedule-row .input,
-.schedule-row .p-inputtext,
-.schedule-row .p-calendar,
-.schedule-row .p-inputnumber {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-/* PrimeReact Calendar input alignment */
-.p-calendar .p-inputtext {
-  border-radius: 10px !important;
-  padding: 10px 12px !important;
-  border: 1px solid #e5e7eb !important;
-  background: #fff !important;
-  color: var(--text) !important;
-  outline: none !important;
-}
-.p-calendar .p-inputtext:focus {
-  border-color: var(--brand-200) !important;
-  box-shadow: var(--ring) !important;
-}
-
-/* PrimeReact number inputs */
-.p-inputnumber .p-inputtext {
-  border-radius: 10px !important;
-  padding: 10px 12px !important;
-  border: 1px solid #e5e7eb !important;
-  background: #fff !important;
-  color: var(--text) !important;
-  outline: none !important;
-}
-.p-inputnumber .p-inputtext:focus {
-  border-color: var(--brand-200) !important;
-  box-shadow: var(--ring) !important;
-}
-
-/* duration (h + m) side-by-side */
-.duration-group {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-.duration-group .p-inputnumber {
-  flex: 1;
-  min-width: 120px;
-}
-
-/* helper under fields */
-.schedule-row .helper {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* Remove button – soft danger */
-.btn-remove {
-  background: #fff5f5;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  width: 100%;
-  padding: 10px 0;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: 700;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
-  height: 44px;
-  align-self: end;
-}
-.btn-remove:hover {
-  background: #ffe4e6;
-  color: #7f1d1d;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
-}
-
-/* Add session – brand subtle */
-.btn-add-session {
-  background: var(--brand-50);
-  color: var(--brand-600);
-  border: 1px solid var(--brand-200);
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
-  margin-top: 6px;
-  transition: 0.2s ease;
-}
-.btn-add-session:hover {
-  background: #e7f2ff; /* slightly darker than brand-50 */
-  color: #0b1324;
-  box-shadow: 0 4px 12px rgba(30, 136, 255, 0.18);
-}
-
-/* Auto summary line */
-.schedule-total-helper,
-.schedule-summary {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 10px;
-  display: block;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .schedule-row {
-    grid-template-columns: 1fr 1fr 1fr 56px;
-    gap: 12px;
+@media (max-width: 980px) {
+  .schedule-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 720px) {
-  .schedule-row {
+@media (max-width: 640px) {
+  .schedule-grid {
     grid-template-columns: 1fr;
   }
-  .btn-remove {
-    width: 100%;
-  }
 }
 
-/* Optional: better PrimeReact button icons inside inputs */
-.p-inputnumber .p-inputnumber-button,
-.p-calendar-w-btn .p-button {
-  border-radius: 8px !important;
+/* Keep each schedule block contained & soft */
+.schedule-block {
+  background: #f9fbfc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e8eb;
+  margin-bottom: 16px;
+  overflow: hidden; /* important: prevents any control overflow */
 }
 
-/* Optional subtle focus ring on schedule-row when any child is focused */
-.schedule-row:has(.p-inputtext:focus, .input:focus) {
-  box-shadow: 0 10px 24px rgba(30, 136, 255, 0.14);
-  border-color: var(--brand-200);
+/* Header row & remove button */
+.schedule-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-/* Fix for Safari (no :has support) – lightweight fallback */
-@supports not selector(:has(*)) {
-  .schedule-row.focus-ring {
-    box-shadow: 0 10px 24px rgba(30, 136, 255, 0.14);
-    border-color: var(--brand-200);
-  }
+.remove-session {
+  background: #ffeff0;
+  border: 1px solid #ffd6d9;
+  color: #c62828;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.remove-session:hover {
+  background: #ffdfe2;
+}
+
+/* End time helper */
+.end-time {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Add button + footer */
+.styled-add-btn {
+  background: #eef9ff;
+  border: 1px solid #b8e3ff;
+  color: #0078d4;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.styled-add-btn:hover {
+  background: #dff3ff;
+}
+
+.total-duration {
+  margin-top: 12px;
+  font-size: 15px;
+  color: #374151;
+}
+
+/* Clean dual-pill duration inputs (no steppers) */
+.duration-group2 {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.duration-input-wrap .p-inputnumber-input.duration-input {
+  height: 44px;
+  line-height: 44px;
+  font-size: 14px;
+  padding: 0 14px;
+  border: 1px solid #e5e8eb;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+}
+
+.duration-input-wrap .p-inputnumber-input.duration-input:focus {
+  outline: none;
+  border-color: #b8e3ff;
+  box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.12);
+}
+
+/* Make suffix text a bit softer */
+.duration-input-wrap .p-inputnumber-input::placeholder {
+  color: #9aa3af;
+}
+
+.schedule-calendar {
+  height: 100%;
+}
+/* Right-side group in the header */
+.header-right {
+  margin-left: auto;            /* push to the far right */
+  display: flex;
+  align-items: center;
+  gap: 10px;                    /* space between chip and remove button */
+}
+
+/* End time chip in header */
+.end-chip {
+  font-size: 12px;
+  color: #0b1324;
+  background: #f3f6ff;          /* soft brand-ish background */
+  border: 1px solid #dbe7ff;    /* subtle border */
+  padding: 6px 10px;
+  border-radius: 999px;         /* pill */
+  line-height: 1;
+  white-space: nowrap;          /* keep it on one line */
+}
+
+/* If the chip text gets long, allow graceful ellipsis */
+.end-chip {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Keep remove button visually aligned with chip height */
+.remove-session {
+  height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -33,9 +33,80 @@ const EditCourse = () => {
   const [error, setError] = useState("");
   const [course, setCourse] = useState(null);
 
+  // --- NEW HELPERS: format to backend shape ---
+  const formatDuration = (totalMinutes) => {
+    const mins = Math.max(0, Number(totalMinutes) || 0);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    const parts = [];
+    if (h > 0) parts.push(`${h}h`);
+    if (m > 0) parts.push(`${m}m`);
+    return parts.length ? parts.join(" ") : "0m";
+  };
+
+  const formatScheduleTime = (date) => {
+    if (!date) return "";
+    // Local date formatting: "20 Aug - 7:00 PM"
+    const d = new Date(date);
+    const day = d.getDate();
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const mon = months[d.getMonth()];
+    let hours = d.getHours();
+    const minutes = d.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    if (hours === 0) hours = 12; // 12-hour clock
+    return `${day} ${mon} - ${hours}:${minutes} ${ampm}`;
+  };
   const [tools, setTools] = useState([]);
   const [schedule, setSchedule] = useState([]);
+  const addScheduleItem = () => {
+    setSchedule((prev) => [
+      ...prev,
+      { label: "", start: null, durationMinutes: 60 }, // default 1 hr
+    ]);
+  };
 
+  const updateScheduleItem = (index, patch) => {
+    setSchedule((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], ...patch };
+      return next;
+    });
+  };
+
+  const removeScheduleItem = (index) => {
+    setSchedule((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Auto-calc total course duration from all sessions
+  useEffect(() => {
+    if (!schedule || schedule.length === 0) return; // allow manual inputs when empty
+
+    const totalMinutes = schedule.reduce((sum, s) => {
+      const minutes = Number(s?.durationMinutes) || 0;
+      return sum + Math.max(0, minutes);
+    }, 0);
+
+    setCourse((prev) => ({
+      ...prev,
+      durationHours: Math.floor(totalMinutes / 60),
+      durationMinutes: totalMinutes % 60,
+    }));
+  }, [schedule]);
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -94,41 +165,6 @@ const EditCourse = () => {
     );
   };
 
-  // Add a fresh session row
-  const addScheduleItem = () => {
-    setSchedule((prev) => [
-      ...prev,
-      { label: "", start: null, durationMinutes: 60 }, // default 1 hr
-    ]);
-  };
-
-  const updateScheduleItem = (index, patch) => {
-    setSchedule((prev) => {
-      const next = [...prev];
-      next[index] = { ...next[index], ...patch };
-      return next;
-    });
-  };
-
-  const removeScheduleItem = (index) => {
-    setSchedule((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // Auto-calc total course duration from all sessions
-  useEffect(() => {
-    if (!schedule || schedule.length === 0) return; // allow manual inputs when empty
-
-    const totalMinutes = schedule.reduce((sum, s) => {
-      const minutes = Number(s?.durationMinutes) || 0;
-      return sum + Math.max(0, minutes);
-    }, 0);
-
-    setCourse((prev) => ({
-      ...prev,
-      durationHours: Math.floor(totalMinutes / 60),
-      durationMinutes: totalMinutes % 60,
-    }));
-  }, [schedule]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourse((prev) => {
@@ -156,10 +192,11 @@ const EditCourse = () => {
       tools,
       // schedule,
 
-      schedule: schedule.map((s) => ({
+      schedule: schedule.map((s, idx) => ({
+        id: `schedule-${idx + 1}`,
         label: s.label?.trim() || "",
-        start: s.start ? new Date(s.start).toISOString() : null, // store ISO for backend
-        durationMinutes: Number(s.durationMinutes) || 0,
+        time: s.start ? formatScheduleTime(new Date(s.start)) : "",
+        duration: formatDuration(Number(s.durationMinutes) || 0),
       })),
 
       updatedAt: Date.now(),
@@ -546,66 +583,156 @@ const EditCourse = () => {
           </button>
         </section>
 
-        {/* Schedule Section */}
-        <section className="card">
+        <section className="card schedule-card">
           <h3 className="card-title">Schedule</h3>
 
-          {schedule.map((item, index) => (
-            <div key={index} className="schedule-row">
-              <input
-                className="input"
-                placeholder="Label"
-                value={item.label}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].label = e.target.value;
-                  setSchedule(list);
-                }}
-              />
+          {schedule.length === 0 && (
+            <div className="empty-msg">No schedule added yet.</div>
+          )}
 
-              <input
-                className="input"
-                placeholder="Date & Time"
-                value={item.time}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].time = e.target.value;
-                  setSchedule(list);
-                }}
-              />
+          {schedule.map((item, index) => {
+            const start = item.start ? new Date(item.start) : null;
+            const end =
+              start && item.durationMinutes
+                ? new Date(start.getTime() + item.durationMinutes * 60000)
+                : null;
 
-              <input
-                className="input"
-                placeholder="Duration"
-                value={item.duration}
-                onChange={(e) => {
-                  const list = [...schedule];
-                  list[index].duration = e.target.value;
-                  setSchedule(list);
-                }}
-              />
+            const hours = Math.floor((item.durationMinutes || 0) / 60);
+            const minutes = (item.durationMinutes || 0) % 60;
 
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() =>
-                  setSchedule(schedule.filter((_, i) => i !== index))
-                }
-              >
-                ✕
-              </button>
-            </div>
-          ))}
+            return (
+              <div key={index} className="schedule-block">
+                {/* Title Row */}
+                {/* <div className="schedule-row-header">
+                      <span className="session-title">Session {index + 1}</span>
+                      <button
+                        type="button"
+                        className="remove-session"
+                        onClick={() => removeScheduleItem(index)}
+                      >
+                        ✕
+                      </button>
+                    </div> */}
+
+                <div className="schedule-row-header">
+                  <span className="session-title">Session {index + 1}</span>
+
+                  <div className="header-right">
+                    {end && (
+                      <span className="end-chip" title={end.toLocaleString()}>
+                        Ends: {end.toLocaleString()}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      className="remove-session"
+                      onClick={() => removeScheduleItem(index)}
+                      aria-label={`Remove Session ${index + 1}`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+                {/* Grid */}
+                <div className="schedule-grid">
+                  {/* Label */}
+                  <div className="field">
+                    <label>Session Label *</label>
+                    <input
+                      className="input"
+                      placeholder="Kickoff / Module 1 / Live Q&A"
+                      value={item.label}
+                      onChange={(e) =>
+                        updateScheduleItem(index, { label: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  {/* Date Time */}
+                  {/* Date & Time */}
+                  <div className="field">
+                    <label>Date &amp; Time *</label>
+                    <Calendar
+                      value={start}
+                      onChange={(e) =>
+                        updateScheduleItem(index, { start: e.value })
+                      }
+                      showTime
+                      hourFormat="24"
+                      showIcon
+                      placeholder="Select date & time"
+                      className="w-full schedule-calendar"
+                      inputClassName="control-input" // NEW: makes height uniform
+                    />
+                  </div>
+
+                  {/* Duration */}
+                  {/* Duration */}
+                  <div className="field">
+                    <label>Duration *</label>
+                    <div className="duration-group2">
+                      <InputNumber
+                        value={hours}
+                        onValueChange={(e) => {
+                          const newHours = Math.max(0, e.value || 0);
+                          const newTotal =
+                            newHours * 60 + ((item.durationMinutes || 0) % 60);
+                          updateScheduleItem(index, {
+                            durationMinutes: newTotal,
+                          });
+                        }}
+                        min={0}
+                        max={23}
+                        step={1}
+                        useGrouping={false}
+                        showButtons={false} // <- IMPORTANT
+                        suffix=" h"
+                        inputClassName="duration-input"
+                        className="duration-input-wrap"
+                      />
+
+                      <InputNumber
+                        value={minutes}
+                        onValueChange={(e) => {
+                          let m = Math.max(0, e.value || 0);
+                          if (m > 59) m = 59;
+                          const newTotal =
+                            Math.floor((item.durationMinutes || 0) / 60) * 60 +
+                            m;
+                          updateScheduleItem(index, {
+                            durationMinutes: newTotal,
+                          });
+                        }}
+                        min={0}
+                        max={59}
+                        step={5}
+                        useGrouping={false}
+                        showButtons={false} // <- IMPORTANT
+                        suffix=" m"
+                        inputClassName="duration-input"
+                        className="duration-input-wrap"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
 
           <button
             type="button"
-            className="btn btn-secondary"
-            onClick={() =>
-              setSchedule([...schedule, { label: "", time: "", duration: "" }])
-            }
+            className="btn-add-session styled-add-btn"
+            onClick={addScheduleItem}
           >
-            + Add Schedule Item
+            + Add Session
           </button>
+
+          <div className="total-duration">
+            Total Duration:&nbsp;
+            <strong>
+              {course.durationHours}h {course.durationMinutes}m
+            </strong>
+          </div>
         </section>
 
         {/* Footer buttons */}
