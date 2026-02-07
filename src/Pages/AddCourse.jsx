@@ -762,7 +762,7 @@ const AddCourse = () => {
                         updateScheduleItem(index, { start: e.value })
                       }
                       showTime
-                      hourFormat="24"
+                      hourFormat="12"
                       showIcon
                       placeholder="Select date & time"
                       className="w-full schedule-calendar"

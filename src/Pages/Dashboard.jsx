@@ -245,7 +245,7 @@ const Dashboard = ({ courses = [], loading = false, err = "" }) => {
                       <div className="cell course">
                         <img
                           src={
-                            c?.thumbnailImage?.trim?.() ||
+                            // c?.thumbnailImage?.trim?.() ||
                             c?.promoImage?.trim?.() ||
                             "/images/courses/course-1.svg"
                           }

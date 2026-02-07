@@ -223,7 +223,8 @@ const EditCourse = () => {
       setSaving(true);
       setError("");
       await updateCourse(id, payload);
-      navigate("/admin/courses"); // keep admin route
+      navigate(`/admin/courses/${id}`); // keep admin route
+      // http://localhost:3000/admin/courses/wwwsss
     } catch (e) {
       console.error(e);
       setError(e.message || "Failed to update course");
@@ -400,7 +401,7 @@ const EditCourse = () => {
             </div>
 
             <div className="field">
-              <label>Live URL</label>
+              <label>Project Live URL</label>
               <input
                 className="input"
                 name="liveUrl"
@@ -480,33 +481,6 @@ const EditCourse = () => {
         <section className="card">
           <h3 className="card-title">Timeline &amp; Metrics</h3>
           <div className="grid-2">
-            <div className="field">
-              <label>Duration (Hours)</label>
-              <input
-                className="input"
-                name="durationHours"
-                type="number"
-                min="0"
-                value={course.durationHours}
-                onChange={handleChange}
-                placeholder="e.g., 4"
-              />
-            </div>
-
-            <div className="field">
-              <label>Duration (Minutes)</label>
-              <input
-                className="input"
-                name="durationMinutes"
-                type="number"
-                min="0"
-                max="59"
-                value={course.durationMinutes}
-                onChange={handleChange}
-                placeholder="e.g., 30"
-              />
-            </div>
-
             <div className="field">
               <label>Rating (0–5)</label>
               <input
@@ -636,7 +610,7 @@ const EditCourse = () => {
                 {/* Grid */}
                 <div className="schedule-grid">
                   {/* Label */}
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Session Label *</label>
                     <input
                       className="input"
@@ -646,7 +620,7 @@ const EditCourse = () => {
                         updateScheduleItem(index, { label: e.target.value })
                       }
                     />
-                  </div>
+                  </div> */}
 
                   {/* Date Time */}
                   {/* Date & Time */}
@@ -658,7 +632,7 @@ const EditCourse = () => {
                         updateScheduleItem(index, { start: e.value })
                       }
                       showTime
-                      hourFormat="24"
+                      hourFormat="12"
                       showIcon
                       placeholder="Select date & time"
                       className="w-full schedule-calendar"

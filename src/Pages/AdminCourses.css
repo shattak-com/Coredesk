@@ -56,7 +56,7 @@
 
 /* Title section */
 .ac-title-wrap { min-width: 240px; }
-.ac-course-title { font-weight: 800; color: var(--text); }
+.ac-course-title { font-weight: 800; color: var(--text); cursor: pointer; }
 .ac-sub { margin-top: 2px; }
 
 /* Meta badges */

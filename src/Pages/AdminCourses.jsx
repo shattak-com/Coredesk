@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getAllCourses } from "../services/courses.services";
 import "./AdminCourses.css";
 
@@ -132,6 +132,9 @@ const AdminCourses = () => {
     });
   }, [courses, categories, status, q]);
 
+  const navigateToCourse = (id) => {
+    window.open(`https://shattak.com/course/${id}`, "_blank");
+  };
   return (
     <div className=" ac-root">
       {/* Main */}
@@ -224,13 +227,18 @@ const AdminCourses = () => {
           ) : (
             filtered.map((c) => (
               <div className="ac-row" key={c.id}>
+                {/* <img src={c.promoImage} alt="" /> */}
                 <div className="ac-title-wrap">
-                  <div className="ac-course-title" title={c.title}>
+                  <div
+                    className="ac-course-title"
+                    title={c.title}
+                    onClick={() => {
+                      navigateToCourse(c.id);
+                    }}
+                  >
                     {c.title || "Untitled course"}
                   </div>
-                  {typeof c.price === "number" ? (
-                    <div className="ac-sub muted">{formatINR(c.price)}</div>
-                  ) : null}
+                  {c.id}
                 </div>
 
                 <div className="ac-meta">
@@ -261,12 +269,14 @@ const AdminCourses = () => {
                   <Link
                     to={`/admin/courses/${c.id}`}
                     className="ac-btn ac-btn-dark"
+                    target="_blank"
                   >
                     View
                   </Link>
                   <Link
                     to={`/admin/courses/${c.id}/edit`}
                     className="ac-btn ac-btn-dark"
+                    target="_blank"
                   >
                     Edit
                   </Link>

@@ -201,7 +201,7 @@ const CourseDetails = () => {
           <h2 className="cd-title">Course details</h2>
         </div>
         <div className="cd-actions">
-          <Link to={`/admin/courses/${id}/edit`} className="btn" title="Edit">
+          <Link to={`/admin/courses/${id}/edit`} className="btn" title="Edit" target="_blank">
             ✏️ Edit
           </Link>
           <button
@@ -278,13 +278,17 @@ const CourseDetails = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                Open live URL ↗
+                Open Project live URL ↗
               </a>
             ) : null}
           </div>
         </div>
       </section>
-
+      {about ? (
+        <Section icon="📝" title="About">
+          <p className="cd-about">{about}</p>
+        </Section>
+      ) : null}
       {/* STATS STRIP */}
       <section className="card cd-stats">
         <div className="cd-stat">
@@ -617,11 +621,11 @@ const CourseDetails = () => {
       </Section>
 
       {/* About (optional repeat at bottom) */}
-      {about ? (
+      {/* {about ? (
         <Section icon="📝" title="About">
           <p className="cd-about">{about}</p>
         </Section>
-      ) : null}
+      ) : null} */}
     </div>
   );
 };
