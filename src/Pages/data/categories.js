@@ -24,5 +24,5 @@ export const categories = [
   { id: "Academical", label: CATEGORY_LABELS.ACADEMICAL },
   { id: "Sport & Gaming", label: CATEGORY_LABELS.SPORT },
   { id: "Lifestyle", label: CATEGORY_LABELS.LIFESTYLE },
-  { id: "Career & Growth", label: CATEGORY_LABELS.CAREER },
+  { id: "Career & Growth", label: CATEGORY_LABELS.CAREER }, 
 ];
