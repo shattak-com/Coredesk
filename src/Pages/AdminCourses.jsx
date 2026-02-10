@@ -154,11 +154,63 @@ const AdminCourses = () => {
                 value={categories}
                 onChange={(e) => setCategories(e.target.value)}
               >
-                {all_categories.map((c) => (
+                {/* {all_categories.map((c) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
-                ))}
+                ))} */} {/* ms found  a issue here i made this ststics tempory  */}
+                <option value="All">
+                All
+                </option>
+
+                <option value="Futured">
+                Futured
+                </option>
+
+                <option value="Software Development">
+                Software Development
+                </option>
+
+                <option value="Data & AI">
+                Data & AI
+                </option>
+
+                <option value="DevOps & Cloud">
+                DevOps & Cloud
+                </option>
+
+                <option value="Business & Management">
+                Business & Management
+                </option>
+
+                <option value="Marketing">
+                Marketing
+                </option>
+
+                <option value="Finance">
+                Finance
+                </option>
+
+                <option value="Creative">
+                Creative
+                </option>
+
+                <option value="Academical">
+                Academical
+                </option>
+
+                <option value="Sport & Gaming">
+                Sport & Gaming
+                </option>
+
+                <option value="Lifestyle">
+                Lifestyle
+                </option>
+
+                <option value="Career & Growth">
+                Career & Growth
+                </option>
+
               </select>
             </div>
 
