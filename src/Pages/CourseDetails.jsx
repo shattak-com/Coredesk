@@ -6,10 +6,10 @@ import "./CourseDetails.css";
 const formatINR = (n) =>
   typeof n === "number"
     ? new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 0,
-      }).format(n)
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(n)
     : n;
 
 // ---------- helpers ----------
@@ -151,7 +151,9 @@ const CourseDetails = () => {
 
   // ✅ Normalize categories for display
   const all_categories = toCategoryArray(categories);
-
+  const navigateToCourse = (id) => {
+    window.open(`https://shattak.com/course/${id}`, "_blank");
+  };
   const heroImg =
     (thumbnailImage && thumbnailImage.trim()) ||
     (promoImage && promoImage.trim()) ||
@@ -222,7 +224,9 @@ const CourseDetails = () => {
         </div>
 
         <div className="cd-hero-body">
-          <h1 className="cd-course-title" title={title}>
+          <h1 className="cd-course-title" title={title} onClick={() => {
+            navigateToCourse(id) ;
+          }}>
             {safeTxt(title, "Untitled course")}
           </h1>
           {subtitle ? <p className="cd-sub muted">{subtitle}</p> : null}
@@ -294,9 +298,8 @@ const CourseDetails = () => {
         <div className="cd-stat">
           <div className="cd-stat-label">Status</div>
           <div
-            className={`cd-stat-value ${
-              (status || "").toLowerCase() === "published" ? "ok" : "warn"
-            }`}
+            className={`cd-stat-value ${(status || "").toLowerCase() === "published" ? "ok" : "warn"
+              }`}
           >
             {status || "Draft"}
           </div>

@@ -114,3 +114,56 @@
   .ac-row { grid-template-columns: 1fr; align-items: flex-start; }
   .ac-actions { justify-content: flex-start; }
 }
+/* Row card with image */
+.ac-row {
+  display: grid;
+  grid-template-columns: 100px 1.8fr 1fr auto; /* Add 100px width for the image */
+  gap: 16px;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 10px rgba(16,24,40,.05);
+}
+
+/* Image */
+.ac-image-wrap {
+  width: 100px;
+  height: 70px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ac-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* For smaller screens, image will be stacked on top of the content */
+@media (max-width: 900px) {
+  .ac-row {
+    grid-template-columns: 1fr; /* Make it a single column layout */
+    align-items: flex-start;
+  }
+
+  .ac-actions {
+    justify-content: flex-start;
+  }
+
+  /* Image Wrap adjustments */
+  .ac-image-wrap {
+    width: 80px; /* Slightly smaller image */
+    height: 60px; /* Maintain aspect ratio */
+    margin-bottom: 10px;
+  }
+}
+.ac-row:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  transition: all ease-in-out 0.3s;
+}

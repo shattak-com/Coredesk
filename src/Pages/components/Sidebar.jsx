@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
+import { logoutAdmin } from "../../firebase/auth";
 
 const Sidebar = ({ open, onToggle }) => {
   const navigate = useNavigate();
@@ -13,7 +14,8 @@ const Sidebar = ({ open, onToggle }) => {
 
       <div className="sb-header">
         <div className="brand2" onClick={() => navigate("/")}>
-          <span className="logo-square2" aria-hidden />
+          <img className="logo-square2" aria-hidden src="https://firebasestorage.googleapis.com/v0/b/shattak-prod.firebasestorage.app/o/Shattak_logo_dark.png?alt=media&token=7609d196-b953-47aa-a498-bc3f4440a0b1" />
+          {/* <span className="logo-square2" aria-hidden /> */}
           <div className="brand2-text">
             <h1 className="brand2-title">CoreDesk</h1>
             <p className="brand2-sub">For Shattak</p>
@@ -49,7 +51,10 @@ const Sidebar = ({ open, onToggle }) => {
       </nav>
 
       <div className="sb-footer">
-        <button className="sb-logout">Logout</button>
+        <button className="sb-logout" onClick={() => {
+          logoutAdmin();
+          window.location.href = "/admin-login";
+        }}>Logout</button>
       </div>
     </aside>
   );

@@ -7,10 +7,10 @@ import "./AdminCourses.css";
 const formatINR = (n) =>
   typeof n === "number"
     ? new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 0,
-      }).format(n)
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(n)
     : n;
 
 const uniq = (arr) => Array.from(new Set(arr.filter(Boolean))).sort();
@@ -160,55 +160,55 @@ const AdminCourses = () => {
                   </option>
                 ))} */} {/* ms found  a issue here i made this ststics tempory  */}
                 <option value="All">
-                All
+                  All
                 </option>
 
                 <option value="Futured">
-                Futured
+                  Futured
                 </option>
 
                 <option value="Software Development">
-                Software Development
+                  Software Development
                 </option>
 
                 <option value="Data & AI">
-                Data & AI
+                  Data & AI
                 </option>
 
                 <option value="DevOps & Cloud">
-                DevOps & Cloud
+                  DevOps & Cloud
                 </option>
 
                 <option value="Business & Management">
-                Business & Management
+                  Business & Management
                 </option>
 
                 <option value="Marketing">
-                Marketing
+                  Marketing
                 </option>
 
                 <option value="Finance">
-                Finance
+                  Finance
                 </option>
 
                 <option value="Creative">
-                Creative
+                  Creative
                 </option>
 
                 <option value="Academical">
-                Academical
+                  Academical
                 </option>
 
                 <option value="Sport & Gaming">
-                Sport & Gaming
+                  Sport & Gaming
                 </option>
 
                 <option value="Lifestyle">
-                Lifestyle
+                  Lifestyle
                 </option>
 
                 <option value="Career & Growth">
-                Career & Growth
+                  Career & Growth
                 </option>
 
               </select>
@@ -279,6 +279,13 @@ const AdminCourses = () => {
           ) : (
             filtered.map((c) => (
               <div className="ac-row" key={c.id}>
+                <div className="ac-image-wrap">
+                  <img
+                    src={c.promoImage || "https://via.placeholder.com/80x60?text=No+Image"}
+                    alt={c.title}
+                    className="ac-image"
+                  />
+                </div>
                 {/* <img src={c.promoImage} alt="" /> */}
                 <div className="ac-title-wrap">
                   <div

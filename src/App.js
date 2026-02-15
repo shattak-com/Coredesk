@@ -10,6 +10,8 @@ import Dashboard from "./Pages/Dashboard";
 import AppLayout from "./Pages/components/Applayout";
 import AddCourse from "./Pages/AddCourse";
 import CourseDetails from "./Pages/CourseDetails";
+import ProtectedRoute from "./Pages/ProtectedRoute";
+import AdminLogin from "./Pages/AdminLogin";
 
 const App = () => {
   const [courses, setCourses] = useState(null);
@@ -43,40 +45,66 @@ const App = () => {
   }, []);
 
   return (
+
     <BrowserRouter>
       <Routes>
-        {/* Shared layout with sidebar */}
+
+        {/* Login page */}
+        <Route path="/admin-login" element={<AdminLogin />} />
+
+        {/* Protected Admin Layout */}
         <Route
+          // path="/admin"
+          path="/admin"
           element={
-            <AppLayout courses={courses ?? []} loading={loading} err={err} />
+            <ProtectedRoute>
+              <AppLayout
+                courses={courses ?? []}
+                loading={loading}
+                err={err}
+              />
+            </ProtectedRoute>
           }
         >
+
+          {/* /admin */}
           <Route
             index
             element={
-              <Dashboard courses={courses ?? []} loading={loading} err={err} />
+              <Dashboard
+                courses={courses ?? []}
+                loading={loading}
+                err={err}
+              />
             }
           />
-          <Route path="admin">
-            <Route
-              path="courses"
-              element={
-                <AdminCourses
-                  courses={courses ?? []}
-                  loading={loading}
-                  err={err}
-                />
-              }
-            />
-            <Route path="/admin/courses/add" element={<AddCourse />} />
 
-            <Route path="courses/:id" element={<CourseDetails />} />
+          {/* /admin/courses */}
+          <Route
+            path="courses"
+            element={
+              <AdminCourses
+                courses={courses ?? []}
+                loading={loading}
+                err={err}
+              />
+            }
+          />
 
-            <Route path="courses/:id/edit" element={<EditCourse />} />
-          </Route>
+          {/* /admin/courses/add */}
+          <Route path="courses/add" element={<AddCourse />} />
+
+          {/* /admin/courses/:id */}
+          <Route path="courses/:id" element={<CourseDetails />} />
+
+          {/* /admin/courses/:id/edit */}
+          <Route path="courses/:id/edit" element={<EditCourse />} />
         </Route>
+        {/* <Route path="" element={<AdminLogin />} /> */}
+
       </Routes>
     </BrowserRouter>
+
   );
 };
 

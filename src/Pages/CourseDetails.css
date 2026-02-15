@@ -233,3 +233,7 @@
 @media (max-width: 720px){
   .btn{ font-size: 13px; }
 }
+
+.cd-course-title{
+  cursor: pointer;
+}

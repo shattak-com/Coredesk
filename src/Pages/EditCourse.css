@@ -213,3 +213,99 @@
   border-left: 4px solid #dc2626;
   margin-bottom: 20px;
 }
+
+.duration-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.duration-input {
+  width: 80px;
+}
+/* ================================
+   PROJECT GALLERY (MODERN STYLE)
+================================ */
+.project-gallery {
+  display: grid;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.gallery-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.gallery-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: box-shadow 0.2s ease;
+}
+
+.gallery-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.gallery-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #d1d5db;
+}
+
+.gallery-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.gallery-inputs input.input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+}
+
+.gallery-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-add-gallery {
+  margin-top: 12px;
+  padding: 10px 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-add-gallery:hover {
+  background: #f3f4f6;
+}
+.form-errors {
+  background: #ffeaea;
+  border: 1px solid #ff4d4f;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  color: #b00020;
+}
+
+.form-errors ul {
+  margin: 8px 0 0 16px;
+}
