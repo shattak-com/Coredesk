@@ -4,7 +4,7 @@ export const isAdminAuthenticated = () => {
 };
 
 export const loginAdmin = (password) => {
-    if (password === process.env.REACT_APP_ADMIN_PASSWORD) {
+    if (password == process.env.REACT_APP_ADMIN_PASSWORD) {
         localStorage.setItem("admin-auth", "true");
         return true;
     }
