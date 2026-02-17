@@ -24,7 +24,7 @@ const Sidebar = ({ open, onToggle }) => {
       </div>
 
       <nav className="sb-nav">
-        <NavLink end to="/" className="sb-link">
+        <NavLink end to="/admin" className="sb-link">
           <span className="sb-ico">🏠</span>
           <span className="sb-text">Overview</span>
         </NavLink>

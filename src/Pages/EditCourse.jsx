@@ -211,9 +211,8 @@ const EditCourse = () => {
           title: data.title ?? "",
           subtitle: data.subtitle ?? "",
           about: data.about ?? data.summary ?? "",
-          // category: data.category ?? "",
 
-          categories: toCategoryArray(data.categories), // <-- normalize to array
+          categories: toCategoryArray(data.categories),
 
           mode: data.mode ?? "",
           level: data.level ?? "",
@@ -227,14 +226,16 @@ const EditCourse = () => {
           originalPrice: data.originalPrice ?? 0,
           rating: data.rating ?? 0,
           enrollmentCount: data.enrollmentCount ?? 0,
-          prerequisites: data.prerequisites ?? [], // ← add this
-          liveSessions: data.liveSessions ?? [], // ✅ ADD THIS
-          postSessionMaterials: data.postSessionMaterials ?? [], // ✅ ADD THIS
-          reviews: data.reviews ?? [], // ✅ ADD THIS LINE
-          faqs: data.faqs ?? [],   // ✅ IMPORTANT
+          prerequisites: data.prerequisites ?? [],
+          liveSessions: data.liveSessions ?? [],
+          postSessionMaterials: data.postSessionMaterials ?? [],
+          reviews: data.reviews ?? [],
+          faqs: data.faqs ?? [],
           requirements: data.requirements ?? [],
           instructors: data.instructors ?? [],
           projects: data.projects ?? [],
+          promoImageBrand: data.promoImageBrand ?? "",
+
         });
         setTools(data.tools ?? []);
         setSchedule(data.schedule ?? []);
@@ -915,6 +916,43 @@ const EditCourse = () => {
                 <img src={course.thumbnailImage} alt="Thumb Preview" width="120" />
               )}
             </div>
+            {/* BRAND PROMO IMAGE */}
+            <div className="field">
+              <label>Promo Brand Image</label>
+
+              {/* File Upload */}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileUpload(e, "promoImageBrand")}
+              />
+
+              <div className="or-divider">OR</div>
+
+              {/* Direct URL */}
+              <input
+                type="text"
+                className="input"
+                placeholder="Paste brand image URL here"
+                value={course.promoImageBrand}
+                onChange={(e) =>
+                  setCourse((prev) => ({
+                    ...prev,
+                    promoImageBrand: e.target.value,
+                  }))
+                }
+              />
+
+              {course.promoImageBrand && (
+                <img
+                  src={course.promoImageBrand}
+                  alt="Brand Preview"
+                  width="120"
+                  style={{ marginTop: "8px" }}
+                />
+              )}
+            </div>
+
           </div>
         </section>
 
