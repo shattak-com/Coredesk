@@ -206,14 +206,14 @@ const CourseDetails = () => {
           <Link to={`/admin/courses/${id}/edit`} className="btn" title="Edit" target="_blank">
             ✏️ Edit
           </Link>
-          <button
+          {/* <button
             className="btn btn-danger"
             onClick={onDelete}
             disabled={deleting}
             title="Delete"
           >
             {deleting ? "Deleting…" : "🗑 Delete"}
-          </button>
+          </button> */}
         </div>
       </div>
 
